@@ -15,7 +15,6 @@ jobs:
   create-server:
     executor: aws
     steps:
-      - checkout
          
       - run:
           name: Install dependencies
