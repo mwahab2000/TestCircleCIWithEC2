@@ -40,3 +40,4 @@ workflows:
   default:
     jobs:
       - say-hello
+      - delete-aws-stack 
