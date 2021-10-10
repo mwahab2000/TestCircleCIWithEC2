@@ -45,7 +45,7 @@ jobs:
             echo "http://$SERVER_IP"
             
             curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678" --request PUT --data "http://$SERVER_IP" https://api.memstash.io/values/SERVER_URL
-            IP = $(curl -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678" --request GET https://api.memstash.io/values/SERVER_URL)
+            IP = $(curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678"  --request GET https://api.memstash.io/values/SERVER_URL)
             echo "${IP}"
             
             
