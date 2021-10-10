@@ -1,0 +1,30 @@
+Description: >
+  Udacity Project 4 stack - Operationalize a Machine Learning Microservice API 
+Parameters:
+  ID:
+    Description: Unique identifier.
+    Type: String
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub Project4-${ID}
+      GroupDescription: Allow port all ports
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 9100
+          CidrIp: 0.0.0.0/0
+        
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup
+      KeyName: udacityProject4
+      ImageId: ami-09e67e426f25ce0d7 
+      Tags:
+        - Key: Name
+          Value: !Sub backend-${ID}
