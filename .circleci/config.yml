@@ -2,6 +2,21 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+executors:
+ aws:
+    docker:
+      - image: amazon/aws-cli
+commands:
+  delete-aws-stack:
+    description: Delete the stack in order to free resources
+    steps:
+      - run:
+          name: delete stack
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-backend 
+          
+      
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -18,10 +33,6 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
           
-  delete-stack:
-    steps:
-    - run:
-        aws cloudformation delete-stack --stack-name udapeople-backend
       
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
