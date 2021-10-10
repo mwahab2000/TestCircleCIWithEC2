@@ -1,56 +1,20 @@
 version: 2.1
 
+orbs:
+  aws-cli: circleci/aws-cli@x.y
 
-executors:
-  node:
-    docker:
-      - image: circleci/node:13.8.0
-  python:
-    docker:
-      - image: python:3.9.0-alpine
-  aws:
-    docker:
-      - image: amazon/aws-cli
 jobs:
-  create-server:
-    executor: aws
+  aws-cli-example:
+    executor: aws-cli/default
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: ["d3:39:d3:16:84:f9:c9:1c:46:78:a1:f9:ab:5c:71:6f"]
-    
-      - run:
-          name: Install dependencies
-          command: yum install -y tar gzip
-      - run:
-          name: Deploy backend infrastructure
-          working_directory: ./.circleci
-          command: |
-            aws cloudformation deploy \
-              --template-file server.yml \
-              --stack-name "MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}
-      - run:
-          name: Save backend URL in memstash
-          command: |
-            SERVER_IP=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text)
-            
-            
-            echo "${SERVER_IP}"
-            echo "$SERVER_IP"
-            echo "http://$SERVER_IP"
-            
-            curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678" --request PUT --data "http://$SERVER_IP" https://api.memstash.io/values/SERVER_URL
-            IP=$(curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678"  --request GET https://api.memstash.io/values/SERVER_URL)
-            echo "${IP}"
-            
-            
+      - aws-cli/setup:
+          profile-name: example
+      - run: echo "Run your code here"
 
 workflows:
-    default:
-      jobs:
-        - create-server
+  version: 2
+  aws-cli:
+    jobs:
+      - aws-cli-example:
+          context: aws
