@@ -28,15 +28,15 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file server.yml \
-              --stack-name "MLearning-Microservice-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name "MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=MLearning-Microservice-${CIRCLE_WORKFLOW_ID:0:7}
+              --tags project=MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Save backend URL in memstash
           command: |
             SERVER_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=MLearning-Microservice-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:project,Values=MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             
             
