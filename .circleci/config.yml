@@ -15,10 +15,7 @@ jobs:
   create-server:
     executor: aws
     steps:
-         
-      - run:
-          name: Install dependencies
-          command: yum install -y tar gzip
+      - checkout   
       - run:
           name: Deploy backend infrastructure
           working_directory: ./.circleci
