@@ -15,7 +15,13 @@ jobs:
   create-server:
     executor: aws
     steps:
-      - checkout   
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["d3:39:d3:16:84:f9:c9:1c:46:78:a1:f9:ab:5c:71:6f"]
+    
+      - run:
+          name: Install dependencies
+          command: yum install -y tar gzip
       - run:
           name: Deploy backend infrastructure
           working_directory: ./.circleci
