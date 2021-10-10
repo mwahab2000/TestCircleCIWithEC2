@@ -11,11 +11,14 @@ executors:
   aws:
     docker:
       - image: amazon/aws-cli
-commands:
-create-aws-server:
+jobs:
+  create-server:
     executor: aws
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints: ["d3:39:d3:16:84:f9:c9:1c:46:78:a1:f9:ab:5c:71:6f"]
+    
       - run:
           name: Install dependencies
           command: yum install -y tar gzip
@@ -24,10 +27,10 @@ create-aws-server:
           working_directory: ./.circleci
           command: |
             aws cloudformation deploy \
-              --template-file servers.yml \
-              --stack-name "UdacityProject4-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --template-file server.yml \
+              --stack-name "MLearning-Microservice-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+              --tags project=MLearning-Microservice-${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Save backend URL in memstash
           command: |
@@ -37,9 +40,8 @@ create-aws-server:
               --output text)
 
             curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL
-      
+
 workflows:
-  default:
-    jobs:
-      - create-server:
-          create-aws-server
+    default:
+      jobs:
+        - create-server
