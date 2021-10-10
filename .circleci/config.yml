@@ -21,7 +21,7 @@ deploy-infrastructure:
           command: yum install -y tar gzip
       - run:
           name: Deploy backend infrastructure
-          working_directory: ./.circleci/files
+          working_directory: ./.circleci
           command: |
             aws cloudformation deploy \
               --template-file servers.yml \
