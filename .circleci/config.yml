@@ -15,13 +15,6 @@ jobs:
   create-server:
     executor: aws
     steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["d3:39:d3:16:84:f9:c9:1c:46:78:a1:f9:ab:5c:71:6f"]
-    
-      - run:
-          name: Install dependencies
-          command: yum install -y tar gzip
       - run:
           name: Deploy backend infrastructure
           working_directory: ./.circleci
@@ -38,11 +31,6 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=MLearning-MicroService-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
-            
-            
-            echo "${SERVER_IP}"
-            echo "$SERVER_IP"
-            echo "http://$SERVER_IP"
             
             curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678" --request PUT --data "http://$SERVER_IP" https://api.memstash.io/values/SERVER_URL
             IP=$(curl -H "Content-Type: text/plain" -H "token: 1e288415-cfc8-4a0a-a23c-087eb7cd7678"  --request GET https://api.memstash.io/values/SERVER_URL)
